@@ -1,7 +1,7 @@
 # https://gist.github.com/benjamintanweihao/29c85fcd598cc7ccab4c9b3baba3f96f
 # docker run -it --rm --name sparkdev -e DISPLAY=${DISPLAY} -v `pwd`:/home/developer/SparkCourse -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/.PyCharmCE2019.2:/home/developer/.PyCharmCE2019.2 -p 4040:4040 benjamintanweihao/sparkdev
 # docker exec -it sparkdev /opt/pycharm/bin/pycharm.sh
-FROM debian:stretch
+FROM jrei/systemd-ubuntu:18.04
 
 RUN apt-get update \
  && apt-get install -y locales \
@@ -61,16 +61,21 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/* \
  && useradd -ms /bin/bash developer
 
-###### PYCHARM DEPENDENCIES #######
+###### SNAP #######
+
+RUN apt-get update \
+ && apt-get install --no-install-recommends -y \
+  snapd fuse \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && useradd -ms /bin/bash developer
+
+###### PYCHARM #######
 
 WORKDIR /opt/pycharm
 USER developer
-ARG pycharm_source=https://download.jetbrains.com/python/pycharm-community-192.6603.24.tar.gz
 
-RUN curl -fsSL $pycharm_source -o /opt/pycharm/installer.tgz \
-  && tar --strip-components=1 -xzf installer.tgz \
-  && rm installer.tgz \
-  && /usr/bin/python2 /opt/pycharm/helpers/pydev/setup_cython.py build_ext --inplace \
-  && /usr/bin/python3 /opt/pycharm/helpers/pydev/setup_cython.py build_ext --inplace
+RUN systemctl start snapd \
+  && snap install pycharm-professional --classic \
 
-CMD ["/opt/pycharm/bin/pycharm.sh"]
+CMD ["/snap/bin/pycharm-professional"]

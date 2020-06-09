@@ -1,0 +1,21 @@
+problems:
+  - description: systemd is not working in basic Ubuntu image, and snap is systemd-based
+    staktrace: |
+      root@c5ba3307c242:/# snap install pycharm-professional --classic
+      error: cannot perform the following tasks:
+      - Setup snap "core" (9066) security profiles (cannot setup udev for snap "core": cannot reload udev rules: exit status 2
+      udev output:
+      )
+      - Setup snap "core" (9066) security profiles (cannot reload udev rules: exit status 2
+      udev output:
+      )
+solutions:
+  - description: use an image that has systemd set up
+    link: https://stackoverflow.com/a/61161741
+    snippet: docker run -d --name redis --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro jrei/systemd-ubuntu:18.04
+    notes: >
+      after having systemctl on, do:
+        1  apt update
+        2  apt install snapd fuse
+        3  systemctl start snapd
+        4  snap install pycharm-professional --classic
