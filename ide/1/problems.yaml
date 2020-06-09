@@ -1,0 +1,10 @@
+problems:
+  - description: TAR file has been gone from the internet, so we need to find a better solution
+    staktrace: |
+      ---> 7c7e634868cc
+      Step 15/16 : RUN curl -fsSL $pycharm_source -o /opt/pycharm/installer.tgz   && tar --strip-components=1 -xzf installer.tgz   && rm installer.tgz   && /usr/bin/python2 /opt/pycharm/helpers/pydev/setup_cython.py build_ext --inplace   && /usr/bin/python3 /opt/pycharm/helpers/pydev/setup_cython.py build_ext --inplace
+       ---> Running in 78dd70d3379a
+      curl: (22) The requested URL returned error: 403 Forbidden
+      The command '/bin/sh -c curl -fsSL $pycharm_source -o /opt/pycharm/installer.tgz   && tar --strip-components=1 -xzf installer.tgz   && rm installer.tgz   && /usr/bin/python2 /opt/pycharm/helpers/pydev/setup_cython.py build_ext --inplace   && /usr/bin/python3 /opt/pycharm/helpers/pydev/setup_cython.py build_ext --inplace' returned a non-zero code: 22
+solutions:
+  - description: let's try to use recomended installation method -- snap
